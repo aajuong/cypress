@@ -1,0 +1,14 @@
+name: End-to-End Tests
+
+on:
+  workflow_dispatch: # This enables manual triggering from the GitHub UI
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run Cypress against External URL
+        uses: cypress-io/github-action@v6
