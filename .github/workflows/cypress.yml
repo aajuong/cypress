@@ -12,3 +12,7 @@ jobs:
 
       - name: Run Cypress against External URL
         uses: cypress-io/github-action@v6
+        with:
+          browser: chrome
+          headless: true
+          record: false

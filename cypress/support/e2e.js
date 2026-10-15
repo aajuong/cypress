@@ -14,7 +14,14 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands'
+import "./commands";
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+
+Cypress.on("uncaught:exception", (err) => {
+  // qaplayground.com throws a React hydration error (#418) that doesn't affect the UI
+  if (err.message.includes("Minified React error #418")) {
+    return false; // don't fail the test
+  }
+});
