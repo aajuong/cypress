@@ -1,4 +1,8 @@
 export class LandingPage {
+  visit() {
+    cy.visit("/dashboard");
+  }
+
   assertOnLandingPage() {
     cy.url().should("include", "/dashboard");
     cy.get('[data-testid="dashboard-welcome-message"]')
@@ -8,6 +12,10 @@ export class LandingPage {
 
   assertUserLoggedIn(username) {
     cy.get('[data-testid="sidebar-user-info"]').should("contain", username);
+  }
+
+  clickLogOutButton() {
+    cy.get('[data-testid="topbar-logout-btn"]').click();
   }
 }
 

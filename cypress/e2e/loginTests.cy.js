@@ -1,10 +1,16 @@
 const { onLoginPage } = require("../support/pageObjects/login");
 const { onLandingPage } = require("../support/pageObjects/landing");
+const {
+  onForgotPasswordPage,
+} = require("../support/pageObjects/forgotPassword");
 
 describe("Login Tests", () => {
-  it.only("Form Validation for Blank Input Fields", () => {
+  beforeEach("Go to login page", () => {
     onLoginPage.visit();
     onLoginPage.assertOnLoginPage();
+  });
+
+  it("Form Validation for Blank Input Fields", () => {
     onLoginPage.submit();
     onLoginPage.assertOnLoginPage();
     onLoginPage.assertErrorMessageContains("Please enter your username.");
@@ -18,29 +24,57 @@ describe("Login Tests", () => {
     onLoginPage.assertErrorMessageContains("Please enter your username.");
   });
 
-  // it("Login with invalid credentials", () => {
-  //   onLoginPage.visit();
-  //   onLoginPage.assertOnLoginPage();
-  //   onLoginPage.login("invalidUser", "invalidPassword");
-  //   onLoginPage.assertInvalidCredentialsMessage();
-  //   onLoginPage.assertOnLoginPage();
-  // });
+  it("Login with invalid credentials", () => {
+    onLoginPage.login("invalidUser", "invalidPassword");
+    onLoginPage.assertOnLoginPage();
+    onLoginPage.assertErrorMessageContains(
+      "The username or password you entered is incorrect.",
+    );
+  });
 
-  // it("Login with locked user credentials", () => {
-  //   onLoginPage.visit();
-  //   onLoginPage.assertOnLoginPage();
-  //   onLoginPage.login("locked_user", "bank_sauce");
-  //   onLoginPage.assertLockedUserMessage();
-  //   onLoginPage.assertOnLoginPage();
-  // });
+  it("Login with locked user credentials", () => {
+    onLoginPage.login("locked_user", "bank_sauce");
+    onLoginPage.assertOnLoginPage();
+    onLoginPage.assertErrorMessageContains(
+      "Your account has been suspended. Please contact support.",
+    );
+  });
 
-  // it("Login with valid credentials", () => {
-  //   onLoginPage.visit();
-  //   onLoginPage.assertOnLoginPage();
-  //   onLoginPage.login("standard_user", "bank_sauce");
-  //   onLandingPage.assertOnLandingPage();
-  //   onLandingPage.assertUserLoggedIn("standard_user");
+  it("Toggle password visibility", () => {
+    onLoginPage.enterUsername("some_user");
+    onLoginPage.enterPassword("some_password");
+    onLoginPage.togglePasswordVisibility();
+    onLoginPage.assertVisiblePassword("some_password");
+    onLoginPage.togglePasswordVisibility();
+    onLoginPage.assertHiddenPassword();
+  });
 
-    // Add assertions for successful login, e.g., checking for a specific element on the dashboard
+  it("Dashboard Navigation & Session Logout", () => {
+    onLoginPage.login("standard_user", "bank_sauce");
+    onLandingPage.assertOnLandingPage();
+    onLandingPage.assertUserLoggedIn("standard_user");
+    onLandingPage.clickLogOutButton();
+    onLoginPage.assertOnLoginPage();
+  });
+
+  it("Direct unauthorized URL Access", () => {
+    onLandingPage.visit();
+    onLoginPage.assertOnLoginPage();
+  });
+
+  it("Forgot password flow", () => {
+    onLoginPage.clickForgotPasswordLink();
+    onForgotPasswordPage.assertOnForgotPasswordPage();
+    onForgotPasswordPage.clickBackToSignInButton();
+    onLoginPage.assertOnLoginPage();
+    onLoginPage.clickForgotPasswordLink();
+    onForgotPasswordPage.enterEmailAddress("invalidemail");
+    onForgotPasswordPage.assertEmailErrorMessage(
+      "Please enter a valid email address.",
+    );
+    onForgotPasswordPage.enterEmailAddress("user@example.com");
+    onForgotPasswordPage.assertSuccessfulEmailRequest();
+    onForgotPasswordPage.clickBackToSignInButton();
+    onLoginPage.assertOnLoginPage();
   });
 });

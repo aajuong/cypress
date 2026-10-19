@@ -39,31 +39,10 @@ export class LoginPage {
     cy.get('[data-testid="login-submit-btn"]').click();
   }
 
-  assertInvalidCredentialsMessage() {
-    cy.get('[data-testid="login-error-message"]')
-      .should("be.visible")
-      .and("contain", "The username or password you entered is incorrect.");
-  }
-
   assertErrorMessageContains(text) {
     cy.get('[data-testid="login-error-message"]')
       .should("be.visible")
       .and("contain", text);
-  }
-
-  assertLockedUserMessage() {
-    cy.get('[data-testid="login-error-message"]')
-      .should("be.visible")
-      .and(
-        "contain",
-        "Your account has been suspended. Please contact support.",
-      );
-  }
-
-  assertBlankUsernameMessage() {
-    cy.get('[data-testid="login-error-message"]')
-      .should("be.visible")
-      .and("contain", "Username is required.");
   }
 
   assertSubmitButtonVisible() {
@@ -72,6 +51,33 @@ export class LoginPage {
 
   assertForgotPasswordLinkVisible() {
     cy.get('[data-testid="forgot-password-link"]').should("be.visible");
+  }
+
+  assertVisiblePassword(password) {
+    cy.get("#login-password").should("have.attr", "type", "text");
+    cy.get("#login-password").should("have.value", password);
+    cy.get(".relative button").should(
+      "have.attr",
+      "aria-label",
+      "Hide password",
+    );
+  }
+
+  assertHiddenPassword() {
+    cy.get("#login-password").should("have.attr", "type", "password");
+    cy.get(".relative button").should(
+      "have.attr",
+      "aria-label",
+      "Show password",
+    );
+  }
+
+  togglePasswordVisibility() {
+    cy.get(".relative button").click();
+  }
+
+  clickForgotPasswordLink() {
+    cy.get('[data-testid="forgot-password-link"]').click();
   }
 
   login(username, password) {
