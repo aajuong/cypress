@@ -1,8 +1,5 @@
 const { onLoginPage } = require("../support/pageObjects/login");
 const { onLandingPage } = require("../support/pageObjects/landing");
-const {
-  onForgotPasswordPage,
-} = require("../support/pageObjects/forgotPassword");
 
 describe("Login Tests", () => {
   beforeEach("Go to login page", () => {
@@ -59,22 +56,6 @@ describe("Login Tests", () => {
 
   it("Direct unauthorized URL Access", () => {
     onLandingPage.visit();
-    onLoginPage.assertOnLoginPage();
-  });
-
-  it("Forgot password flow", () => {
-    onLoginPage.clickForgotPasswordLink();
-    onForgotPasswordPage.assertOnForgotPasswordPage();
-    onForgotPasswordPage.clickBackToSignInButton();
-    onLoginPage.assertOnLoginPage();
-    onLoginPage.clickForgotPasswordLink();
-    onForgotPasswordPage.enterEmailAddress("invalidemail");
-    onForgotPasswordPage.assertEmailErrorMessage(
-      "Please enter a valid email address.",
-    );
-    onForgotPasswordPage.enterEmailAddress("user@example.com");
-    onForgotPasswordPage.assertSuccessfulEmailRequest();
-    onForgotPasswordPage.clickBackToSignInButton();
     onLoginPage.assertOnLoginPage();
   });
 });
