@@ -5,6 +5,7 @@ const {
 
 describe("Forgot password flow", () => {
   it("Forgot password flow", () => {
+    onLoginPage.visit();
     onLoginPage.clickForgotPasswordLink();
     onForgotPasswordPage.assertOnForgotPasswordPage();
     onForgotPasswordPage.clickBackToSignInButton();
