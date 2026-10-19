@@ -20,11 +20,19 @@ export class LoginPage {
   }
 
   enterUsername(username) {
-    cy.get("#login-username").clear().type(username);
+    this.clearUsername().type(username);
+  }
+
+  clearUsername() {
+    return cy.get("#login-username").clear();
   }
 
   enterPassword(password) {
-    cy.get("#login-password").clear().type(password);
+    this.clearPassword().type(password);
+  }
+
+  clearPassword() {
+    return cy.get("#login-password").clear();
   }
 
   submit() {
@@ -37,6 +45,12 @@ export class LoginPage {
       .and("contain", "The username or password you entered is incorrect.");
   }
 
+  assertErrorMessageContains(text) {
+    cy.get('[data-testid="login-error-message"]')
+      .should("be.visible")
+      .and("contain", text);
+  }
+
   assertLockedUserMessage() {
     cy.get('[data-testid="login-error-message"]')
       .should("be.visible")
@@ -44,6 +58,12 @@ export class LoginPage {
         "contain",
         "Your account has been suspended. Please contact support.",
       );
+  }
+
+  assertBlankUsernameMessage() {
+    cy.get('[data-testid="login-error-message"]')
+      .should("be.visible")
+      .and("contain", "Username is required.");
   }
 
   assertSubmitButtonVisible() {
