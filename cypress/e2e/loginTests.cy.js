@@ -18,6 +18,7 @@ describe("Login Tests", () => {
     onLoginPage.clearUsername();
     onLoginPage.enterPassword("somePassword");
     onLoginPage.submit();
+    onLoginPage.assertOnLoginPage();
     onLoginPage.assertErrorMessageContains("Please enter your username.");
   });
 
